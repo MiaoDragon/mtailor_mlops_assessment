@@ -4,6 +4,7 @@ This provides code for deployment to Cerebrium.
 
 from fastapi import FastAPI, Request, HTTPException
 from contextlib import asynccontextmanager
+from pydantic import BaseModel
 
 import onnx
 import onnxruntime
@@ -14,6 +15,8 @@ import numpy as np
 from model import OnnxModel
 import base64
 
+class ImageInput(BaseModel):
+    img: str
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -24,11 +27,12 @@ async def lifespan(app: FastAPI):
 app = FastAPI()
 
 @app.post("/predict")
-def predict(request: Request, img: str):
+def predict(request: Request, payload: ImageInput):
     """
     the image is represented by Base64 data
     """
     onnx_model: OnnxModel = request.app.state.onnx_model
+    img = payload.img
     if not img:
         raise HTTPException(status_code=400, detail="Image data is required")
     if not isinstance(img, str):
