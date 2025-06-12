@@ -1,0 +1,24 @@
+[cerebrium.deployment]
+name = "mtailor-ylmiao"
+python_version = "3.10"
+include = ["./*"]
+exclude = [".*"]
+shell_commands = [""]
+
+[cerebrium.hardware]
+compute = "TRN1"
+gpu_count = 1        # Number of GPUs needed
+cpu = 8
+memory = 32.0
+
+[cerebrium.runtime.custom]
+port = 8192
+healthcheck_endpoint = "/health"
+readycheck_endpoint = "/ready"
+dockerfile_path = "./Dockerfile"
+
+[cerebrium.scaling]
+min_replicas = 0
+max_replicas = 2
+cooldown = 1
+replica_concurrency = 100

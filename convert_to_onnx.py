@@ -13,7 +13,6 @@ import onnxruntime
 
 from PIL import Image
 import numpy as np
-import urllib.request  # for downloading the model
 
 
 # for adding preprocessing steps to the ONNX model
@@ -27,7 +26,6 @@ import urllib.request  # for downloading the model
 
 def main():
     # download the model from the request url
-    urllib.request.urlretrieve("https://www.dropbox.com/s/b7641ryzmkceoc9/pytorch_model_weights.pth", 'pytorch_model_weights.pth')
     model = Classifier()
     model.load_state_dict(torch.load("pytorch_model_weights.pth"))
     model.eval()
