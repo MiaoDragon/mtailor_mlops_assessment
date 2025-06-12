@@ -5,3 +5,4 @@ onnxruntime
 fastapi
 uvicorn
 requests
+pillow

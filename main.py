@@ -11,18 +11,21 @@ import onnxruntime
 
 from PIL import Image
 import numpy as np
+from io import BytesIO
+
 
 from model import OnnxModel
 import base64
 
+
 class ImageInput(BaseModel):
     img: str
 
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    app.state.onnx_model = OnnxModel("model.onnx")
-    yield
-    del app.state.onnx_model
+# @asynccontextmanager
+# async def lifespan(app: FastAPI):
+#     app.state.onnx_model = OnnxModel("model.onnx")
+#     yield
+#     del app.state.onnx_model
 
 app = FastAPI()
 
@@ -31,7 +34,8 @@ def predict(request: Request, payload: ImageInput):
     """
     the image is represented by Base64 data
     """
-    onnx_model: OnnxModel = request.app.state.onnx_model
+    # onnx_model: OnnxModel = request.app.state.onnx_model
+    onnx_model = OnnxModel("model.onnx")
     img = payload.img
     if not img:
         raise HTTPException(status_code=400, detail="Image data is required")
@@ -39,6 +43,9 @@ def predict(request: Request, payload: ImageInput):
         raise HTTPException(status_code=400, detail="Image data must be a Base64 encoded string")
     try:
         image_data = base64.b64decode(img)
+        image_data = Image.open(BytesIO(image_data))
+
+        # image_data = cv2.imdecode(image_data, cv2.IMREAD_COLOR)  # decode the image data
     except Exception:
         return {"error": "Invalid Base64 encoding"}
     # check the output of the onnx model
