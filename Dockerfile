@@ -40,4 +40,4 @@ RUN wget https://www.dropbox.com/s/b7641ryzmkceoc9/pytorch_model_weights.pth
 
 EXPOSE 8192
 
-CMD ["python", "-m", "uvicorn", "server:app", "--host", "0.0.0.0", "--port", "8192"]
+CMD ["python", "-m", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8192"]
